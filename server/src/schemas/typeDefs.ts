@@ -35,4 +35,6 @@ const typeDefs = `
         token: String
         user: User
     }
-`
+`;
+
+export default typeDefs;
