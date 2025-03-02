@@ -49,7 +49,7 @@
 
 ## Usage
 
-[Video Demo]()
+![Walkthrough](./client/public/book-search-engine-walkthrough.gif)
 
 ### Core Functionality
 
