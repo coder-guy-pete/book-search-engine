@@ -30,5 +30,5 @@
     /* Output */
     "outDir": "./dist" /* Redirect output structure to the directory. */
   },
-  "exclude": ["dist", "client/dist", "server/dist"]
+  "exclude": ["dist", "client/dist"]
 }
