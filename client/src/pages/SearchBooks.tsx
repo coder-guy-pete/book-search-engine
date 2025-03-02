@@ -11,7 +11,6 @@ import {
 
 import Auth from '../utils/auth';
 import { searchGoogleBooks } from '../utils/API';
-import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
 import { useMutation, useQuery } from '@apollo/client';
@@ -19,23 +18,14 @@ import { SAVE_BOOK } from '../utils/mutations';
 import { GET_ME } from '../utils/queries';
 
 const SearchBooks = () => {
-  // create state for holding returned google api data
   const [searchedBooks, setSearchedBooks] = useState<Book[]>([]);
-  // create state for holding our search field data
   const [searchInput, setSearchInput] = useState('');
 
-  // create state to hold saved bookId values
-  const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
+  const { data, refetch: refetchUser } = useQuery(GET_ME);
+  const savedBookIds = data?.me?.savedBooks.map((book: Book) => book.bookId) || [];
 
-  // establishes the mutation for saving a book
-  const [saveBook, { error }] = useMutation(SAVE_BOOK);
-  const { refetch: refetchUser } = useQuery(GET_ME);
-
-  // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
-  // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
-  useEffect(() => {
-    return () => saveBookIds(savedBookIds);
-  });
+    // establishes the mutation for saving a book
+    const [saveBook, { error }] = useMutation(SAVE_BOOK);
 
   // create method to search for books and set state on form submit
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -73,8 +63,6 @@ const SearchBooks = () => {
   const handleSaveBook = async (bookId: string) => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave: Book = searchedBooks.find((book) => book.bookId === bookId)!;
-
-    // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
@@ -88,7 +76,6 @@ const SearchBooks = () => {
         },
       });
 
-        setSavedBookIds([...savedBookIds, bookToSave.bookId]);
         await refetchUser();
 
       if (error) {
