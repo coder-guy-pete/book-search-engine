@@ -1,4 +1,4 @@
-import { User } from '../models/index.js';
+import { User, BookDocument } from '../models/index.js';
 import { signToken, AuthenticationError } from '../services/auth.js';
 
 interface loginArgs {
@@ -15,7 +15,7 @@ interface AddUserArgs {
 }
 
 interface SaveBookArgs {
-    book: any;
+    book: BookDocument;
 }
 
 interface RemoveBookArgs {
@@ -60,10 +60,10 @@ const resolvers = {
             return { token, user };
         },
 
-        saveBook: async (_parent: any, { book }: SaveBookArgs, { req }: any) => {
-            if (req.user) {
+        saveBook: async (_parent: any, { book }: SaveBookArgs, context: Context) => {
+            if (context.user) {
                 return User.findOneAndUpdate(
-                    { _id: req.user._id },
+                    { _id: context.user._id },
                     { $addToSet: { savedBooks: book } },
                     { new: true, runValidators: true }
                 ).populate('savedBooks');
