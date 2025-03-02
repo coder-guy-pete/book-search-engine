@@ -18,7 +18,6 @@ const db = async (): Promise<typeof mongoose.connection> => {
         return mongoose.connection;
     } catch (error) {
         console.log('Error connecting to database: ', error);
-        console.log('MONGODB_URI: ', MONGODB_URI);
         throw new Error('Database connection failed');  
     }
 };
