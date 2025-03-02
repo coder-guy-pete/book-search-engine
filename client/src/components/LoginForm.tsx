@@ -32,15 +32,10 @@ const LoginForm = ({}: { handleModalClose: () => void }) => {
 
     try {
       const { data } = await loginUser({
-        variables: {
-          email: userFormData.email,
-          password: userFormData.password,
-        },
+        variables: { ...userFormData },
       });
 
-      if (data && data.loginUser) {
-        Auth.login(data.loginUser.token);
-      }
+      Auth.login(data.login.token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);

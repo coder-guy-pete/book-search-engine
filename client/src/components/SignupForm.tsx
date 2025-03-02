@@ -34,16 +34,10 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
 
     try {
       const { data } = await addUser({
-        variables: {
-          username: userFormData.username,
-          email: userFormData.email,
-          password: userFormData.password,
-        },
+        variables: { input: { ...userFormData } },
       });
 
-      if (data && data.addUser) {
-        Auth.login(data.addUser.token);
-      }
+      Auth.login(data.addUser.token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);
